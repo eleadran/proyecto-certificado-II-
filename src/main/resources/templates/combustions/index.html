@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{layout::head}">
+    <meta charset="UTF-8">
+    <title>Lista de Combustibles</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<nav th:insert="~{layout::menu}"></nav>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Lista de Combustibles</h2>
+        <a class="btn btn-success" th:href="@{/combustions/create}">Nuevo Combustible</a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Tipo de Combustión</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="combustion : ${combustiones}">
+            <td th:text="${combustion.id}"></td>
+            <td th:text="${combustion.tipoCombustion}"></td>
+            <td>
+                <a th:href="@{/combustions/edit/{id}(id=${combustion.id})}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="javascript:void(0);"
+                   th:attr="data-url=@{/combustions/delete/{id}(id=${combustion.id})}"
+                   class="btn btn-danger btn-sm btn-delete">
+                    Eliminar
+                </a>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".btn-delete").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const url = this.getAttribute("data-url");
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede revertir",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

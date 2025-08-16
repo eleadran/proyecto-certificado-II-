@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{layout::head}">
+  <meta charset="UTF-8">
+  <title>Registrar Modelo</title>
+</head>
+<body>
+<nav th:insert="~{layout::menu}"></nav>
+<br />
+<div class="card">
+  <div class="card-header text-bg-secondary">
+    Mantenimiento de Modelo
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Registrar Nuevo Modelo</h5>
+    <hr />
+    <form th:action="@{/modelos/save}" method="post" th:object="${modelo}">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="txtDisenoModelo" th:field="*{disenoModelo}"
+               placeholder="Ejemplo: Deportivo, SUV" required>
+        <label for="txtDisenoModelo">Diseño del Modelo</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="txtTecnologiaModelo" th:field="*{tecnologiaModelo}"
+               placeholder="Ejemplo: GPS, Conexión Bluetooth">
+        <label for="txtTecnologiaModelo">Tecnología del Modelo</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="txtSeguridadModelo" th:field="*{seguridadModelo}"
+               placeholder="Ejemplo: Airbags, Control de Tracción">
+        <label for="txtSeguridadModelo">Seguridad del Modelo</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="txtInteriorModelo" th:field="*{interiorModelo}"
+               placeholder="Ejemplo: Tapicería de cuero, Pantalla táctil">
+        <label for="txtInteriorModelo">Interior del Modelo</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="txtPrecio" th:field="*{precio}"
+               placeholder="Ejemplo: 20000.00" step="0.01" required>
+        <label for="txtPrecio">Precio del Modelo</label>
+      </div>
+      <button type="submit" class="btn btn-success">Registrar Modelo</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
