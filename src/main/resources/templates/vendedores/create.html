@@ -58,9 +58,13 @@
                 <label for="txtventas_vendedor">Ventas del Vendedor</label>
             </div>
 
-            <!-- Botón -->
-            <button type="submit" class="btn btn-success">Actualizar</button>
-            <a th:href="@{/vendedores}" class="btn btn-secondary">Cancelar</a>
+            <!-- Botones de acción -->
+            <button type="submit" class="btn btn-success shadow-sm">
+                <i class="bi bi-save2-fill me-1"></i> Registrar vendedor
+            </button>
+            <a href="/vendedores" class="btn btn-secondary shadow-sm">
+                <i class="bi bi-arrow-left me-1"></i> Cancelar
+            </a>
         </form>
     </div>
 </div>
