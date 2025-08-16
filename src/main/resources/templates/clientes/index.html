@@ -38,8 +38,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="CLIENTE : ${clientes}">
-                <td th:text="${CLIENTE.cod_cliente}"></td>
+            <tr th:each="CLIENTE, iterStat : ${clientes}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
+
                 <td th:text="${CLIENTE.nombre_cliente}"></td>
                 <td th:text="${CLIENTE.apellido_cliente}"></td>
                 <td th:text="${CLIENTE.trabajo_cliente}"></td>
@@ -87,3 +89,4 @@
 
 </body>
 </html>
+

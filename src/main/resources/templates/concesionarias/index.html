@@ -37,8 +37,10 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="CONCESIONARIA : ${concesionarias}">
-        <td th:text="${CONCESIONARIA.codConcesionaria}"></td>
+      <tr th:each="CONCESIONARIA, iterStat : ${concesionarias}">
+          <!-- ID consecutivo -->
+          <td th:text="${iterStat.index + 1}"></td>
+
         <td th:text="${CONCESIONARIA.nombreConcesionaria}"></td>
         <td th:text="${CONCESIONARIA.cantidadTrabajaConcesionaria}"></td>
         <td th:text="${CONCESIONARIA.direccionConcesionaria}"></td>

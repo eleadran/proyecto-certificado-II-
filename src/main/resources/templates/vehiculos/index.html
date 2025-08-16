@@ -39,8 +39,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="vehiculo : ${vehiculos}">
-                <td th:text="${vehiculo.id}"></td>
+            <tr th:each="vehiculo, iterStat : ${vehiculos}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
+
                 <td th:text="${vehiculo.color}"></td>
                 <td th:text="${vehiculo.anio}"></td>
                 <td th:text="${vehiculo.combustion.tipoCombustion}"></td>

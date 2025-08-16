@@ -39,8 +39,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="factura : ${facturas}">
-                <td th:text="${factura.id}"></td>
+            <tr th:each="factura, iterStat : ${facturas}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
                 <td th:text="${factura.fechaFactura}"></td>
                 <td th:text="${factura.importeVenta}"></td>
                 <td th:text="${factura.cliente.nombre_cliente}"></td>

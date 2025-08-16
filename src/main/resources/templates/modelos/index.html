@@ -26,8 +26,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="modelo : ${modelos}">
-            <td th:text="${modelo.id}"></td>
+        <tr th:each="modelo, iterStat : ${modelos}">
+            <!-- ID consecutivo -->
+            <td th:text="${iterStat.index + 1}"></td>
+
             <td th:text="${modelo.disenoModelo}"></td>
             <td th:text="${modelo.tecnologiaModelo}"></td>
             <td th:text="${modelo.seguridadModelo}"></td>

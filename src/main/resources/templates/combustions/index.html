@@ -35,8 +35,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="combustion : ${combustiones}">
-                <td th:text="${combustion.id}"></td>
+            <tr th:each="combustion, iterStat: ${combustiones}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
+
                 <td th:text="${combustion.tipoCombustion}"></td>
                 <td class="text-center">
                     <a th:href="@{/combustions/edit/{id}(id=${combustion.id})}"

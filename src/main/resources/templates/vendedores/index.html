@@ -38,8 +38,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="VENDEDOR : ${vendedores}">
-                <td th:text="${VENDEDOR.cod_vendedor}"></td>
+            <tr th:each="VENDEDOR, iterStat : ${vendedores}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
+
                 <td th:text="${VENDEDOR.nombre_vendedor}"></td>
                 <td th:text="${VENDEDOR.apellido_vendedor}"></td>
                 <td th:text="${VENDEDOR.sueldo_vendedor}"></td>

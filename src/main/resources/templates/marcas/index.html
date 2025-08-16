@@ -36,8 +36,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="marca : ${marcas}">
-                <td th:text="${marca.id}"></td>
+            <tr th:each="marca, iterStat : ${marcas}">
+                <!-- ID consecutivo -->
+                <td th:text="${iterStat.index + 1}"></td>
+
                 <td th:text="${marca.nombreMarca}"></td>
                 <td th:text="${marca.stock}"></td>
                 <td class="text-center">
