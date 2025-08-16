@@ -86,19 +86,30 @@
 
         // Validación nombre
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
-            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
             valido = false;
         }
 
         // Validación apellido
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellido)) {
-            errorApellido.textContent = "⚠️ El apellido solo puede contener letras.";
+            errorApellido.textContent = "⚠️ El apellido solo puede contener letras y espacios.";
             valido = false;
         }
 
         return valido;
     }
+
+    // Bloqueo en vivo para nombre
+    document.getElementById("txtnombre_vendedor").addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    });
+
+    // Bloqueo en vivo para apellido
+    document.getElementById("txtapellido_vendedor").addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    });
 </script>
+
 
 </body>
 </html>

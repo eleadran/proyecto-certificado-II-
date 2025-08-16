@@ -81,13 +81,13 @@
         errorNombre.textContent = "";
         errorCantidad.textContent = "";
 
-        // Validación: Nombre solo letras
+        // Validación: Nombre (solo letras y espacios)
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
-            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            errorNombre.textContent = "⚠️ El nombre no puede contener números ni caracteres especiales.";
             valido = false;
         }
 
-        // Validación: Cantidad solo números (aunque el input es number, se refuerza)
+        // Validación: Cantidad (solo números)
         if (!/^[0-9]+$/.test(cantidad)) {
             errorCantidad.textContent = "⚠️ La cantidad de trabajadores solo puede contener números.";
             valido = false;
@@ -95,7 +95,25 @@
 
         return valido;
     }
+
+    // --- VALIDACIÓN EN VIVO ---
+    document.getElementById("txtnombre_concesionaria").addEventListener("input", function () {
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            document.getElementById("errorNombreConcesionaria").textContent = "";
+        } else {
+            document.getElementById("errorNombreConcesionaria").textContent = "⚠️ El nombre no puede contener números ni caracteres especiales.";
+        }
+    });
+
+    document.getElementById("txtcantidad_trabaja_concesionaria").addEventListener("input", function () {
+        if (/^[0-9]*$/.test(this.value.trim())) {
+            document.getElementById("errorCantidadTrabajadores").textContent = "";
+        } else {
+            document.getElementById("errorCantidadTrabajadores").textContent = "⚠️ La cantidad de trabajadores solo puede contener números.";
+        }
+    });
 </script>
+
 
 </body>
 </html>

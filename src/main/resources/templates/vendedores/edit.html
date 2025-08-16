@@ -84,19 +84,42 @@
 
         // Validación nombre
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
-            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
             valido = false;
         }
 
         // Validación apellido
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellido)) {
-            errorApellido.textContent = "⚠️ El apellido solo puede contener letras.";
+            errorApellido.textContent = "⚠️ El apellido solo puede contener letras y espacios.";
             valido = false;
         }
 
         return valido;
     }
+
+    // Bloqueo y mensaje en vivo para nombre
+    document.getElementById("txtnombre_vendedor").addEventListener("input", function () {
+        const errorNombre = document.getElementById("errorNombre");
+        if (/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/.test(this.value)) {
+            errorNombre.textContent = "⚠️ No se permiten números ni caracteres especiales.";
+            this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+        } else {
+            errorNombre.textContent = "";
+        }
+    });
+
+    // Bloqueo y mensaje en vivo para apellido
+    document.getElementById("txtapellido_vendedor").addEventListener("input", function () {
+        const errorApellido = document.getElementById("errorApellido");
+        if (/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/.test(this.value)) {
+            errorApellido.textContent = "⚠️ No se permiten números ni caracteres especiales.";
+            this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+        } else {
+            errorApellido.textContent = "";
+        }
+    });
 </script>
+
 
 </body>
 </html>

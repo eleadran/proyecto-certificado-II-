@@ -84,9 +84,9 @@
         errorNombre.textContent = "";
         errorCantidad.textContent = "";
 
-        // Validación: Nombre solo letras
+        // Validación: Nombre solo letras (sin números ni caracteres especiales)
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
-            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            errorNombre.textContent = "⚠️ El nombre no puede contener números ni caracteres especiales.";
             valido = false;
         }
 
@@ -98,7 +98,27 @@
 
         return valido;
     }
+
+    // --- VALIDACIÓN EN VIVO ---
+    document.getElementById("txtnombre_concesionaria").addEventListener("input", function () {
+        const errorNombre = document.getElementById("errorNombreConcesionaria");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            errorNombre.textContent = "";
+        } else {
+            errorNombre.textContent = "⚠️ El nombre no puede contener números ni caracteres especiales.";
+        }
+    });
+
+    document.getElementById("txtcantidad_trabaja_concesionaria").addEventListener("input", function () {
+        const errorCantidad = document.getElementById("errorCantidadTrabajadores");
+        if (/^[0-9]*$/.test(this.value.trim())) {
+            errorCantidad.textContent = "";
+        } else {
+            errorCantidad.textContent = "⚠️ La cantidad de trabajadores solo puede contener números.";
+        }
+    });
 </script>
+
 
 </body>
 </html>

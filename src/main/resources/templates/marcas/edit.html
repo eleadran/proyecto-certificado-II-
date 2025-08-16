@@ -48,25 +48,33 @@
 
 <script>
     function validarFormulario() {
-        let nombreMarca = document.getElementById("txtNombreMarca").value;
-
-        // Mensaje de error
+        let nombreMarca = document.getElementById("txtNombreMarca").value.trim();
         let errorNombreMarca = document.getElementById("errorNombreMarca");
-
         let valido = true;
 
         // Limpiar errores previos
         errorNombreMarca.textContent = "";
 
-        // Validar que el nombre de la marca NO tenga números
-        if (/\d/.test(nombreMarca)) {
-            errorNombreMarca.textContent = "⚠️ El nombre de la marca no puede contener números.";
+        // Validar que el nombre solo tenga letras y espacios
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombreMarca)) {
+            errorNombreMarca.textContent = "⚠️ El nombre de la marca solo puede contener letras.";
             valido = false;
         }
 
-        return valido; // Si es false, el formulario no se envía
+        return valido; // Si es false, no envía el formulario
     }
+
+    // Validación en vivo
+    document.getElementById("txtNombreMarca").addEventListener("input", function () {
+        let errorNombreMarca = document.getElementById("errorNombreMarca");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            errorNombreMarca.textContent = "";
+        } else {
+            errorNombreMarca.textContent = "⚠️ El nombre de la marca solo puede contener letras.";
+        }
+    });
 </script>
+
 
 </body>
 </html>

@@ -60,30 +60,51 @@
 <!-- Script de validación -->
 <script>
     function validarFormulario() {
-      const nombre = document.getElementById("txtnombre_proveedor").value.trim();
-      const telefono = document.getElementById("txttelefono_proveedor").value.trim();
-      const errorNombre = document.getElementById("errorNombre");
-      const errorTelefono = document.getElementById("errorTelefono");
+        const nombre = document.getElementById("txtnombre_proveedor").value.trim();
+        const telefono = document.getElementById("txttelefono_proveedor").value.trim();
+        const errorNombre = document.getElementById("errorNombre");
+        const errorTelefono = document.getElementById("errorTelefono");
 
-      let valido = true;
-      errorNombre.textContent = "";
-      errorTelefono.textContent = "";
+        let valido = true;
+        errorNombre.textContent = "";
+        errorTelefono.textContent = "";
 
-      // Validar que el nombre solo tenga letras y espacios (incluyendo acentos y ñ)
-      if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
-        errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
-        valido = false;
-      }
+        // Validar nombre: solo letras y espacios
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
+            valido = false;
+        }
 
-      // Validar que el teléfono solo tenga números
-      if (!/^[0-9]+$/.test(telefono)) {
-        errorTelefono.textContent = "⚠️ El teléfono solo puede contener números.";
-        valido = false;
-      }
+        // Validar teléfono: solo números
+        if (!/^[0-9]+$/.test(telefono)) {
+            errorTelefono.textContent = "⚠️ El teléfono solo puede contener números.";
+            valido = false;
+        }
 
-      return valido;
+        return valido;
     }
+
+    // Validación en vivo para nombre
+    document.getElementById("txtnombre_proveedor").addEventListener("input", function () {
+        const errorNombre = document.getElementById("errorNombre");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            errorNombre.textContent = "";
+        } else {
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
+        }
+    });
+
+    // Validación en vivo para teléfono
+    document.getElementById("txttelefono_proveedor").addEventListener("input", function () {
+        const errorTelefono = document.getElementById("errorTelefono");
+        if (/^[0-9]*$/.test(this.value.trim())) {
+            errorTelefono.textContent = "";
+        } else {
+            errorTelefono.textContent = "⚠️ El teléfono solo puede contener números.";
+        }
+    });
 </script>
+
 
 </body>
 </html>

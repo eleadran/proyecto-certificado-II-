@@ -96,7 +96,6 @@
         const combustion = document.getElementById("txtcombustion").value;
         const marca = document.getElementById("txtmarca").value;
 
-        // Elementos de error
         const errorColor = document.getElementById("errorColor");
         const errorAnio = document.getElementById("errorAnio");
         const errorDiseno = document.getElementById("errorDiseno");
@@ -114,37 +113,37 @@
         errorCombustion.textContent = "";
         errorMarca.textContent = "";
 
-        // Validación color (solo letras y espacios)
+        // Validar color: solo letras y espacios
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(color)) {
             errorColor.textContent = "⚠️ El color solo puede contener letras.";
             valido = false;
         }
 
-        // Validación año (entre 1900 y 2100)
-        if (anio < 1900 || anio > 2100) {
-            errorAnio.textContent = "⚠️ El año debe estar entre 1900 y 2100.";
+        // Validar año: solo números y rango válido
+        if (!/^[0-9]+$/.test(anio) || anio < 1900 || anio > 2100) {
+            errorAnio.textContent = "⚠️ El año debe ser un número entre 1900 y 2100.";
             valido = false;
         }
 
-        // Validación diseño (solo letras y espacios)
+        // Validar diseño: solo letras y espacios
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(diseno)) {
             errorDiseno.textContent = "⚠️ El diseño solo puede contener letras.";
             valido = false;
         }
 
-        // Validación precio (mayor a 0)
-        if (isNaN(precio) || parseFloat(precio) <= 0) {
+        // Validar precio: solo números y mayor a 0
+        if (!/^[0-9]+(\.[0-9]+)?$/.test(precio) || parseFloat(precio) <= 0) {
             errorPrecio.textContent = "⚠️ El precio debe ser un número mayor a 0.";
             valido = false;
         }
 
-        // Validación select de combustión
+        // Validar combustión
         if (combustion === "") {
             errorCombustion.textContent = "⚠️ Debe seleccionar un tipo de combustión.";
             valido = false;
         }
 
-        // Validación select de marca
+        // Validar marca
         if (marca === "") {
             errorMarca.textContent = "⚠️ Debe seleccionar una marca.";
             valido = false;
@@ -152,7 +151,46 @@
 
         return valido;
     }
+
+    // Validación en vivo para letras (color y diseño)
+    document.getElementById("txtcolorVehiculo").addEventListener("input", function () {
+        const errorColor = document.getElementById("errorColor");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            errorColor.textContent = "";
+        } else {
+            errorColor.textContent = "⚠️ El color solo puede contener letras.";
+        }
+    });
+
+    document.getElementById("txtdisenoVehiculo").addEventListener("input", function () {
+        const errorDiseno = document.getElementById("errorDiseno");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
+            errorDiseno.textContent = "";
+        } else {
+            errorDiseno.textContent = "⚠️ El diseño solo puede contener letras.";
+        }
+    });
+
+    // Validación en vivo para números (año y precio)
+    document.getElementById("txtanioVehiculo").addEventListener("input", function () {
+        const errorAnio = document.getElementById("errorAnio");
+        if (/^[0-9]*$/.test(this.value.trim())) {
+            errorAnio.textContent = "";
+        } else {
+            errorAnio.textContent = "⚠️ El año solo puede contener números.";
+        }
+    });
+
+    document.getElementById("txtprecioVehiculo").addEventListener("input", function () {
+        const errorPrecio = document.getElementById("errorPrecio");
+        if (/^[0-9]*\.?[0-9]*$/.test(this.value.trim())) {
+            errorPrecio.textContent = "";
+        } else {
+            errorPrecio.textContent = "⚠️ El precio solo puede contener números.";
+        }
+    });
 </script>
+
 
 </body>
 </html>

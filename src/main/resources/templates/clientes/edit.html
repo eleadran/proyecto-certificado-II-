@@ -70,13 +70,55 @@
 </div>
 
 <script>
-    function validarFormulario() {
-        let nombre = document.getElementById("txtnombre_cliente").value;
-        let apellido = document.getElementById("txtapellido_cliente").value;
-        let trabajo = document.getElementById("txttrabajo_cliente").value;
-        let telefono = document.getElementById("txttelefono_cliente").value;
+    // Función para validar solo letras y espacios (sin números ni caracteres especiales)
+    function validarTexto(campoId, errorId, campoNombre) {
+        document.getElementById(campoId).addEventListener("input", function () {
+            let valor = this.value.trim();
+            let error = document.getElementById(errorId);
 
-        // Mensajes de error
+            if (/\d/.test(valor)) {
+                error.textContent = `⚠️ El ${campoNombre} no puede contener números.`;
+            }
+            else if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(valor)) {
+                error.textContent = `⚠️ El ${campoNombre} no puede contener caracteres especiales.`;
+            }
+            else {
+                error.textContent = "";
+            }
+        });
+    }
+
+    // Validación en tiempo real para nombre, apellido y trabajo
+    validarTexto("txtnombre_cliente", "errorNombre", "nombre");
+    validarTexto("txtapellido_cliente", "errorApellido", "apellido");
+    validarTexto("txttrabajo_cliente", "errorTrabajo", "trabajo");
+
+    // Validación en tiempo real para TELÉFONO
+    document.getElementById("txttelefono_cliente").addEventListener("input", function () {
+        let valor = this.value.trim();
+        let error = document.getElementById("errorTelefono");
+
+        if (/[a-zA-Z]/.test(valor)) {
+            error.textContent = "⚠️ El teléfono no puede contener letras.";
+        }
+        else if (/[^0-9]/.test(valor)) {
+            error.textContent = "⚠️ El teléfono no puede contener caracteres especiales.";
+        }
+        else if (valor.length > 0 && valor.length !== 9) {
+            error.textContent = "⚠️ El teléfono debe tener exactamente 9 dígitos numéricos.";
+        }
+        else {
+            error.textContent = "";
+        }
+    });
+
+    // Validación final al enviar
+    function validarFormulario() {
+        let nombre = document.getElementById("txtnombre_cliente").value.trim();
+        let apellido = document.getElementById("txtapellido_cliente").value.trim();
+        let trabajo = document.getElementById("txttrabajo_cliente").value.trim();
+        let telefono = document.getElementById("txttelefono_cliente").value.trim();
+
         let errorNombre = document.getElementById("errorNombre");
         let errorApellido = document.getElementById("errorApellido");
         let errorTrabajo = document.getElementById("errorTrabajo");
@@ -84,37 +126,56 @@
 
         let valido = true;
 
-        // Limpiar errores previos
         errorNombre.textContent = "";
         errorApellido.textContent = "";
         errorTrabajo.textContent = "";
         errorTelefono.textContent = "";
 
-        // Validar que el nombre no tenga números
+        // Validar nombre
         if (/\d/.test(nombre)) {
             errorNombre.textContent = "⚠️ El nombre no puede contener números.";
             valido = false;
         }
+        else if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre no puede contener caracteres especiales.";
+            valido = false;
+        }
 
-        // Validar que el apellido no tenga números
+        // Validar apellido
         if (/\d/.test(apellido)) {
             errorApellido.textContent = "⚠️ El apellido no puede contener números.";
             valido = false;
         }
+        else if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(apellido)) {
+            errorApellido.textContent = "⚠️ El apellido no puede contener caracteres especiales.";
+            valido = false;
+        }
 
-        // Validar que el trabajo no tenga números
+        // Validar trabajo
         if (/\d/.test(trabajo)) {
             errorTrabajo.textContent = "⚠️ El trabajo no puede contener números.";
             valido = false;
         }
+        else if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(trabajo)) {
+            errorTrabajo.textContent = "⚠️ El trabajo no puede contener caracteres especiales.";
+            valido = false;
+        }
 
-        // Validar que el teléfono solo tenga números y tenga exactamente 9 dígitos
-        if (!/^\d{9}$/.test(telefono)) {
+        // Validar teléfono
+        if (/[a-zA-Z]/.test(telefono)) {
+            errorTelefono.textContent = "⚠️ El teléfono no puede contener letras.";
+            valido = false;
+        }
+        else if (/[^0-9]/.test(telefono)) {
+            errorTelefono.textContent = "⚠️ El teléfono no puede contener caracteres especiales.";
+            valido = false;
+        }
+        else if (!/^\d{9}$/.test(telefono)) {
             errorTelefono.textContent = "⚠️ El teléfono debe tener exactamente 9 dígitos numéricos.";
             valido = false;
         }
 
-        return valido; // Si es false, el formulario no se envía
+        return valido;
     }
 </script>
 

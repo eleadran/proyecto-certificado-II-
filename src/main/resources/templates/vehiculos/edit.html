@@ -47,6 +47,7 @@
                        th:field="*{disenoModelo}"
                        placeholder="Ejemplo: Sedán" required>
                 <label for="txtDisenoVehiculo">Diseño del Vehículo</label>
+                <div class="text-danger small" id="errorDiseno"></div>
             </div>
 
             <!-- Campo Precio -->
@@ -90,20 +91,42 @@
 <script>
     function validarFormulario() {
         const color = document.getElementById("txtColorVehiculo").value.trim();
+        const diseno = document.getElementById("txtDisenoVehiculo").value.trim();
+
         const errorColor = document.getElementById("errorColor");
+        const errorDiseno = document.getElementById("errorDiseno");
 
         let valido = true;
-        errorColor.textContent = "";
 
-        // Validar que el color solo tenga letras (permitiendo espacios y acentos)
+        // Limpiar mensajes previos
+        errorColor.textContent = "";
+        errorDiseno.textContent = "";
+
+        // Validar Color
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(color)) {
             errorColor.textContent = "⚠️ El color solo puede contener letras y espacios.";
             valido = false;
         }
 
+        // Validar Diseño
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(diseno)) {
+            errorDiseno.textContent = "⚠️ El diseño solo puede contener letras y espacios.";
+            valido = false;
+        }
+
         return valido;
     }
+
+    // Bloqueo en vivo para que no se escriban caracteres inválidos
+    document.getElementById("txtColorVehiculo").addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    });
+
+    document.getElementById("txtDisenoVehiculo").addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    });
 </script>
+
 
 </body>
 </html>
