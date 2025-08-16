@@ -1,49 +1,123 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:insert="~{layout::head}">
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Actualizar clientes</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <br />
 <div class="card">
-  <div class="card-header text-bg-secondary">
-    Mantenimiento de clientes
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Actualizar clientes</h5>
-    <hr />
-    <form th:action="@{/clientes/save}" method="post" th:object="${cliente}">
-      <input type="hidden" th:field="*{cod_cliente}" >
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtnombre_cliente" th:field="*{nombre_cliente}"
-               placeholder="name@example.com">
-        <label for="txtnombre_cliente">Nombre de cliente</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtapellido_cliente" th:field="*{apellido_cliente}"
-               placeholder="name@example.com">
-        <label for="txtapellido_cliente">apellido de cliente</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txttrabajo_cliente" th:field="*{trabajo_cliente}"
-               placeholder="name@example.com">
-        <label for="txttrabajo_cliente">trabajo del cliente</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txttelefono_cliente" th:field="*{telefono_cliente}"
-               placeholder="name@example.com">
-        <label for="txttelefono_cliente">telefono del cliente</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtdireccion_cliente" th:field="*{direccion_cliente}"
-               placeholder="name@example.com">
-        <label for="txtdireccion_cliente">direcciòn del cliente</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Actualizar</button>
-    </form>
-  </div>
+    <div class="card-header text-bg-secondary">
+        Mantenimiento de clientes
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Actualizar clientes</h5>
+        <hr />
+        <form th:action="@{/clientes/save}" method="post" th:object="${cliente}" onsubmit="return validarFormulario()">
+
+            <!-- Mostrar el ID en solo lectura -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtId"
+                       th:field="*{cod_cliente}" placeholder="ID del cliente" disabled>
+                <label for="txtId">ID del cliente</label>
+            </div>
+            <input type="hidden" th:field="*{cod_cliente}">
+
+            <!-- Nombre -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtnombre_cliente" th:field="*{nombre_cliente}"
+                       placeholder="Nombre" required>
+                <label for="txtnombre_cliente">Nombre de cliente</label>
+                <div class="text-danger small" id="errorNombre"></div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtapellido_cliente" th:field="*{apellido_cliente}"
+                       placeholder="Apellido" required>
+                <label for="txtapellido_cliente">Apellido del cliente</label>
+                <div class="text-danger small" id="errorApellido"></div>
+            </div>
+
+            <!-- Trabajo -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txttrabajo_cliente" th:field="*{trabajo_cliente}"
+                       placeholder="Trabajo" required>
+                <label for="txttrabajo_cliente">Trabajo del cliente</label>
+                <div class="text-danger small" id="errorTrabajo"></div>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txttelefono_cliente" th:field="*{telefono_cliente}"
+                       placeholder="Teléfono" required maxlength="9" minlength="9">
+                <label for="txttelefono_cliente">Teléfono del cliente</label>
+                <div class="text-danger small" id="errorTelefono"></div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtdireccion_cliente" th:field="*{direccion_cliente}"
+                       placeholder="Dirección" required>
+                <label for="txtdireccion_cliente">Dirección del cliente</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    function validarFormulario() {
+        let nombre = document.getElementById("txtnombre_cliente").value;
+        let apellido = document.getElementById("txtapellido_cliente").value;
+        let trabajo = document.getElementById("txttrabajo_cliente").value;
+        let telefono = document.getElementById("txttelefono_cliente").value;
+
+        // Mensajes de error
+        let errorNombre = document.getElementById("errorNombre");
+        let errorApellido = document.getElementById("errorApellido");
+        let errorTrabajo = document.getElementById("errorTrabajo");
+        let errorTelefono = document.getElementById("errorTelefono");
+
+        let valido = true;
+
+        // Limpiar errores previos
+        errorNombre.textContent = "";
+        errorApellido.textContent = "";
+        errorTrabajo.textContent = "";
+        errorTelefono.textContent = "";
+
+        // Validar que el nombre no tenga números
+        if (/\d/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre no puede contener números.";
+            valido = false;
+        }
+
+        // Validar que el apellido no tenga números
+        if (/\d/.test(apellido)) {
+            errorApellido.textContent = "⚠️ El apellido no puede contener números.";
+            valido = false;
+        }
+
+        // Validar que el trabajo no tenga números
+        if (/\d/.test(trabajo)) {
+            errorTrabajo.textContent = "⚠️ El trabajo no puede contener números.";
+            valido = false;
+        }
+
+        // Validar que el teléfono solo tenga números y tenga exactamente 9 dígitos
+        if (!/^\d{9}$/.test(telefono)) {
+            errorTelefono.textContent = "⚠️ El teléfono debe tener exactamente 9 dígitos numéricos.";
+            valido = false;
+        }
+
+        return valido; // Si es false, el formulario no se envía
+    }
+</script>
+
 </body>
 </html>
+
+

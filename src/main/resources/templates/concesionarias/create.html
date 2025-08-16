@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
     <meta charset="UTF-8">
     <title>Registro de Concesionarias</title>
+    <style>
+        .text-danger {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
@@ -14,22 +19,32 @@
     <div class="card-body">
         <h5 class="card-title">Registro de Concesionarias</h5>
         <hr />
-        <form th:action="@{/concesionarias/save}" method="post" th:object="${concesionaria}">
+        <form th:action="@{/concesionarias/save}" method="post" th:object="${concesionaria}" onsubmit="return validarFormulario()">
+
+            <!-- Nombre Concesionaria -->
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="txtnombre_concesionaria" th:field="*{nombreConcesionaria}"
-                       placeholder="Ejemplo: Concesionaria Central">
+                       placeholder="Ejemplo: Concesionaria Central" required>
                 <label for="txtnombre_concesionaria">Nombre de la Concesionaria</label>
+                <div class="text-danger small" id="errorNombreConcesionaria"></div>
             </div>
+
+            <!-- Cantidad Trabajadores -->
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="txtcantidad_trabaja_concesionaria" th:field="*{cantidadTrabajaConcesionaria}"
-                       placeholder="Ejemplo: 50">
+                       placeholder="Ejemplo: 50" required>
                 <label for="txtcantidad_trabaja_concesionaria">Cantidad de Trabajadores</label>
+                <div class="text-danger small" id="errorCantidadTrabajadores"></div>
             </div>
+
+            <!-- Dirección -->
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="txtdireccion_concesionaria" th:field="*{direccionConcesionaria}"
-                       placeholder="Ejemplo: Calle Principal 123">
+                       placeholder="Ejemplo: Calle Principal 123" required>
                 <label for="txtdireccion_concesionaria">Dirección de la Concesionaria</label>
             </div>
+
+            <!-- Proveedor -->
             <div class="form-floating mb-3">
                 <select class="form-select" id="txtcod_proveedor" th:field="*{proveedores.codProveedor}" required>
                     <option th:each="proveedor : ${proveedores}"
@@ -39,9 +54,43 @@
                 </select>
                 <label for="txtcod_proveedor">Proveedor</label>
             </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
+
+            <!-- Botón -->
+            <button type="submit" class="btn btn-success">Registrar</button>
         </form>
     </div>
 </div>
+
+<!-- Script Validación -->
+<script>
+    function validarFormulario() {
+        const nombre = document.getElementById("txtnombre_concesionaria").value.trim();
+        const cantidad = document.getElementById("txtcantidad_trabaja_concesionaria").value.trim();
+
+        const errorNombre = document.getElementById("errorNombreConcesionaria");
+        const errorCantidad = document.getElementById("errorCantidadTrabajadores");
+
+        let valido = true;
+
+        // Limpiar mensajes previos
+        errorNombre.textContent = "";
+        errorCantidad.textContent = "";
+
+        // Validación: Nombre solo letras
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            valido = false;
+        }
+
+        // Validación: Cantidad solo números (aunque el input es number, se refuerza)
+        if (!/^[0-9]+$/.test(cantidad)) {
+            errorCantidad.textContent = "⚠️ La cantidad de trabajadores solo puede contener números.";
+            valido = false;
+        }
+
+        return valido;
+    }
+</script>
+
 </body>
 </html>

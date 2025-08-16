@@ -15,6 +15,11 @@
     <h5 class="card-title">Actualizar Modelo</h5>
     <hr />
     <form th:action="@{/modelos/save}" method="post" th:object="${modelo}">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="txtId" th:field="*{id}"
+                   placeholder="ID de modelos" disabled>
+            <label for="txtId">ID de modelo</label>
+        </div>
       <input type="hidden" th:field="*{id}" />
 
       <div class="form-floating mb-3">

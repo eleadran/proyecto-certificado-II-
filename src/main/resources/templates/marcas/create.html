@@ -29,13 +29,14 @@
         <h5 class="card-title">Registrar Nueva Marca</h5>
         <hr />
 
-        <form th:action="@{/marcas/save}" method="post" th:object="${marca}" id="formMarca">
+        <form th:action="@{/marcas/save}" method="post" th:object="${marca}" id="formMarca" onsubmit="return validarFormulario()">
             <!-- Campo Nombre -->
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="txtNombreMarca"
                        th:field="*{nombreMarca}"
                        placeholder="Ejemplo: Toyota, Honda" required>
                 <label for="txtNombreMarca">Nombre de la Marca</label>
+                <div class="text-danger small" id="errorNombre"></div>
             </div>
 
             <!-- Campo Stock con botones + y - -->
@@ -47,6 +48,7 @@
                            placeholder="Cantidad en stock" min="0" required>
                     <button type="button" class="btn btn-outline-secondary stock-btn" onclick="cambiarStock(1)">+</button>
                 </div>
+                <div class="text-danger small" id="errorStock"></div>
             </div>
 
             <!-- Botón de envío -->
@@ -65,17 +67,36 @@
       stockInput.value = stock;
     }
 
-    document.getElementById("formMarca").addEventListener("submit", function (e) {
+    function validarFormulario() {
       const nombre = document.getElementById("txtNombreMarca").value.trim();
       const stock = document.getElementById("txtStock").value.trim();
 
-      if (!nombre || !stock) {
-        e.preventDefault();
-        alert("Por favor, complete todos los campos antes de registrar.");
+      const errorNombre = document.getElementById("errorNombre");
+      const errorStock = document.getElementById("errorStock");
+
+      let valido = true;
+
+      // Limpiar errores previos
+      errorNombre.textContent = "";
+      errorStock.textContent = "";
+
+      // Validar que el nombre no contenga números
+      if (/\d/.test(nombre)) {
+        errorNombre.textContent = "⚠️ El nombre de la marca no puede contener números.";
+        valido = false;
       }
-    });
+
+      // Validar que el stock sea un número válido y mayor o igual a 0
+      if (!/^\d+$/.test(stock) || parseInt(stock) < 0) {
+        errorStock.textContent = "⚠️ El stock debe ser un número válido mayor o igual a 0.";
+        valido = false;
+      }
+
+      return valido; // Si es false, no se envía el formulario
+    }
 </script>
 
 </body>
 </html>
+
 

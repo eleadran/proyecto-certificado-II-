@@ -3,40 +3,56 @@
 <head th:insert="~{layout::head}">
     <meta charset="UTF-8">
     <title>Lista de Combustibles</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: #f2f2f2;
+            transition: 0.3s ease-in-out;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h2>Lista de Combustibles</h2>
-        <a class="btn btn-success" th:href="@{/combustions/create}">Nuevo Combustible</a>
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold"><i class="bi bi-fuel-pump-fill me-2"></i>Lista de Combustibles</h2>
+        <a class="btn btn-success shadow-sm" th:href="@{/combustions/create}">
+            <i class="bi bi-plus-circle me-1"></i> Nuevo Combustible
+        </a>
     </div>
 
-    <table class="table table-bordered table-hover">
-        <thead class="table-secondary">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Tipo de Combustión</th>
-            <th scope="col">Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="combustion : ${combustiones}">
-            <td th:text="${combustion.id}"></td>
-            <td th:text="${combustion.tipoCombustion}"></td>
-            <td>
-                <a th:href="@{/combustions/edit/{id}(id=${combustion.id})}" class="btn btn-primary btn-sm">Editar</a>
-                <a href="javascript:void(0);"
-                   th:attr="data-url=@{/combustions/delete/{id}(id=${combustion.id})}"
-                   class="btn btn-danger btn-sm btn-delete">
-                    Eliminar
-                </a>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Tabla -->
+    <div class="table-responsive shadow-sm">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tipo de Combustión</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="combustion : ${combustiones}">
+                <td th:text="${combustion.id}"></td>
+                <td th:text="${combustion.tipoCombustion}"></td>
+                <td class="text-center">
+                    <a th:href="@{/combustions/edit/{id}(id=${combustion.id})}"
+                       class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="javascript:void(0);"
+                       th:attr="data-url=@{/combustions/delete/{id}(id=${combustion.id})}"
+                       class="btn btn-sm btn-outline-danger btn-delete" title="Eliminar">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
     <meta charset="UTF-8">
-    <title>Actualizar Vehículo</title>
+    <title>Editar Vehículo</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
@@ -14,58 +14,68 @@
     <div class="card-body">
         <h5 class="card-title">Actualizar Vehículo</h5>
         <hr />
-        <form th:action="@{/vehiculos/save}" method="post" th:object="${vehiculo}">
 
-            <!-- Campo oculto para el ID del vehículo -->
+        <form th:action="@{/vehiculos/save}" method="post" th:object="${vehiculo}" id="formVehiculo" onsubmit="return validarFormulario()">
+            <!-- Campo ID -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtId" th:field="*{id}"
+                       placeholder="ID de vehiculo" disabled>
+                <label for="txtId">ID del Vehículo</label>
+            </div>
             <input type="hidden" th:field="*{id}" />
 
-            <!-- Campo para Color -->
+            <!-- Campo Color -->
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="txtcolorVehiculo" th:field="*{color}"
+                <input type="text" class="form-control" id="txtColorVehiculo"
+                       th:field="*{color}"
                        placeholder="Ejemplo: Rojo" required>
-                <label for="txtcolorVehiculo">Color del Vehículo</label>
+                <label for="txtColorVehiculo">Color del Vehículo</label>
+                <div class="text-danger small" id="errorColor"></div>
             </div>
 
-            <!-- Campo para Año -->
+            <!-- Campo Año -->
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="txtanioVehiculo" th:field="*{anio}"
+                <input type="number" class="form-control" id="txtAnioVehiculo"
+                       th:field="*{anio}"
                        placeholder="Ejemplo: 2023" required min="1900" max="2100">
-                <label for="txtanioVehiculo">Año del Vehículo</label>
+                <label for="txtAnioVehiculo">Año del Vehículo</label>
             </div>
 
-            <!-- Campo para Diseño -->
+            <!-- Campo Diseño -->
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="txtdisenoVehiculo" th:field="*{disenoModelo}"
+                <input type="text" class="form-control" id="txtDisenoVehiculo"
+                       th:field="*{disenoModelo}"
                        placeholder="Ejemplo: Sedán" required>
-                <label for="txtdisenoVehiculo">Diseño del Vehículo</label>
+                <label for="txtDisenoVehiculo">Diseño del Vehículo</label>
             </div>
 
-            <!-- Campo para Precio -->
+            <!-- Campo Precio -->
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="txtprecioVehiculo" th:field="*{precio}"
+                <input type="number" class="form-control" id="txtPrecioVehiculo"
+                       th:field="*{precio}"
                        placeholder="Ejemplo: 25000.00" required step="0.01">
-                <label for="txtprecioVehiculo">Precio del Vehículo</label>
+                <label for="txtPrecioVehiculo">Precio del Vehículo</label>
             </div>
 
             <!-- Selección de Tipo de Combustión -->
             <div class="form-floating mb-3">
-                <select class="form-select" id="txtcombustion" th:field="*{combustion}" required>
+                <select class="form-select" id="txtCombustion" th:field="*{combustion}" required>
                     <option value="" disabled>Seleccione el tipo de combustión</option>
                     <option th:each="comb : ${combustiones}" th:value="${comb.id}" th:text="${comb.tipoCombustion}"></option>
                 </select>
-                <label for="txtcombustion">Tipo de Combustión</label>
+                <label for="txtCombustion">Tipo de Combustión</label>
             </div>
 
             <!-- Selección de Marca -->
             <div class="form-floating mb-3">
-                <select class="form-select" id="txtmarca" th:field="*{marca}" required>
+                <select class="form-select" id="txtMarca" th:field="*{marca}" required>
                     <option value="" disabled>Seleccione una marca</option>
                     <option th:each="marc : ${marcas}" th:value="${marc.id}" th:text="${marc.nombreMarca}"></option>
                 </select>
-                <label for="txtmarca">Marca</label>
+                <label for="txtMarca">Marca</label>
             </div>
 
-            <!-- Botones de acción -->
+            <!-- Botones -->
             <button type="submit" class="btn btn-primary shadow-sm">
                 <i class="bi bi-pencil-fill me-1"></i> Actualizar Vehículo
             </button>
@@ -75,5 +85,26 @@
         </form>
     </div>
 </div>
+
+<!-- Script de validación -->
+<script>
+    function validarFormulario() {
+        const color = document.getElementById("txtColorVehiculo").value.trim();
+        const errorColor = document.getElementById("errorColor");
+
+        let valido = true;
+        errorColor.textContent = "";
+
+        // Validar que el color solo tenga letras (permitiendo espacios y acentos)
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(color)) {
+            errorColor.textContent = "⚠️ El color solo puede contener letras y espacios.";
+            valido = false;
+        }
+
+        return valido;
+    }
+</script>
+
 </body>
 </html>
+

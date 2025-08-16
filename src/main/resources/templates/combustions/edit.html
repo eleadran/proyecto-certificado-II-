@@ -16,7 +16,13 @@
     <hr />
     <form th:action="@{/combustions/save}" method="post" th:object="${combustion}">
       <!-- Campo oculto para el ID -->
-      <input type="hidden" th:field="*{id}" />
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="txtId" th:field="*{id}"
+                   placeholder="ID de combustible" disabled>
+            <label for="txtId">ID de combustible</label>
+        </div>
+        <!-- Campo oculto que sí viaja en el POST -->
+        <input type="hidden" th:field="*{id}">
 
       <!-- Campo para el Tipo de Combustión -->
       <div class="form-floating mb-3">

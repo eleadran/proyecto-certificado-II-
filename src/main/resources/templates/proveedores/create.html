@@ -1,43 +1,84 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
-  <meta charset="UTF-8">
-  <title>Registro de Proveedores</title>
+    <meta charset="UTF-8">
+    <title>Registro de Proveedores</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <br />
 <div class="card">
-  <div class="card-header text-bg-secondary">
-    Mantenimiento de Proveedores
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Registro de Proveedores</h5>
-    <hr />
-    <form th:action="@{/proveedores/save}" method="post" th:object="${proveedor}">
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtnombre_proveedor" th:field="*{nombreProveedor}"
-               placeholder="Ejemplo: Proveedor Central" required>
-        <label for="txtnombre_proveedor">Nombre del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txttelefono_proveedor" th:field="*{telefonoProveedor}"
-               placeholder="Ejemplo: 123456789" required>
-        <label for="txttelefono_proveedor">Teléfono del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="number" class="form-control" id="txtstock_proveedor" th:field="*{stockProveedor}"
-               placeholder="Ejemplo: 100" required>
-        <label for="txtstock_proveedor">Stock del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtdireccion_proveedor" th:field="*{direccionProveedor}"
-               placeholder="Ejemplo: Av. Principal 123" required>
-        <label for="txtdireccion_proveedor">Dirección del Proveedor</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Registrar</button>
-    </form>
-  </div>
+    <div class="card-header text-bg-secondary">
+        Mantenimiento de Proveedores
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Registro de Proveedores</h5>
+        <hr />
+        <form th:action="@{/proveedores/save}" method="post" th:object="${proveedor}" id="formProveedor" onsubmit="return validarFormulario()">
+
+            <!-- Nombre del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtnombre_proveedor" th:field="*{nombreProveedor}"
+                       placeholder="Ejemplo: Proveedor Central" required>
+                <label for="txtnombre_proveedor">Nombre del Proveedor</label>
+                <div class="text-danger small" id="errorNombre"></div>
+            </div>
+
+            <!-- Teléfono del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txttelefono_proveedor" th:field="*{telefonoProveedor}"
+                       placeholder="Ejemplo: 123456789" required maxlength="9" minlength="9">
+                <label for="txttelefono_proveedor">Teléfono del Proveedor</label>
+                <div class="text-danger small" id="errorTelefono"></div>
+            </div>
+
+            <!-- Stock del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="txtstock_proveedor" th:field="*{stockProveedor}"
+                       placeholder="Ejemplo: 100" required>
+                <label for="txtstock_proveedor">Stock del Proveedor</label>
+            </div>
+
+            <!-- Dirección -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtdireccion_proveedor" th:field="*{direccionProveedor}"
+                       placeholder="Ejemplo: Av. Principal 123" required>
+                <label for="txtdireccion_proveedor">Dirección del Proveedor</label>
+            </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn btn-success">Registrar</button>
+        </form>
+    </div>
 </div>
+
+<!-- Script de validación -->
+<script>
+    function validarFormulario() {
+      const nombre = document.getElementById("txtnombre_proveedor").value.trim();
+      const telefono = document.getElementById("txttelefono_proveedor").value.trim();
+      const errorNombre = document.getElementById("errorNombre");
+      const errorTelefono = document.getElementById("errorTelefono");
+
+      let valido = true;
+      errorNombre.textContent = "";
+      errorTelefono.textContent = "";
+
+      // Validar que el nombre solo tenga letras y espacios (incluyendo acentos y ñ)
+      if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+        errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
+        valido = false;
+      }
+
+      // Validar que el teléfono solo tenga números
+      if (!/^[0-9]+$/.test(telefono)) {
+        errorTelefono.textContent = "⚠️ El teléfono solo puede contener números.";
+        valido = false;
+      }
+
+      return valido;
+    }
+</script>
+
 </body>
 </html>

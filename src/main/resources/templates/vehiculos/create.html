@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Registrar Vehículo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .text-danger {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
@@ -15,34 +20,39 @@
     <div class="card-body">
         <h5 class="card-title">Registrar Nuevo Vehículo</h5>
         <hr />
-        <form th:action="@{/vehiculos/save}" method="post" th:object="${vehiculo}">
+
+        <form th:action="@{/vehiculos/save}" method="post" th:object="${vehiculo}" id="formVehiculo" onsubmit="return validarFormulario()">
 
             <!-- Campo para Color -->
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="txtcolorVehiculo" th:field="*{color}"
-                       placeholder="Ejemplo: Rojo" required>
+                <input type="text" class="form-control" id="txtcolorVehiculo"
+                       th:field="*{color}" placeholder="Ejemplo: Rojo" required>
                 <label for="txtcolorVehiculo">Color del Vehículo</label>
+                <div class="text-danger small" id="errorColor"></div>
             </div>
 
             <!-- Campo para Año -->
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="txtanioVehiculo" th:field="*{anio}"
-                       placeholder="Ejemplo: 2023" required min="1900" max="2100">
+                <input type="number" class="form-control" id="txtanioVehiculo"
+                       th:field="*{anio}" placeholder="Ejemplo: 2023" required min="1900" max="2100">
                 <label for="txtanioVehiculo">Año del Vehículo</label>
+                <div class="text-danger small" id="errorAnio"></div>
             </div>
 
             <!-- Campo para Diseño -->
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="txtdisenoVehiculo" th:field="*{disenoModelo}"
-                       placeholder="Ejemplo: Sedán" required>
+                <input type="text" class="form-control" id="txtdisenoVehiculo"
+                       th:field="*{disenoModelo}" placeholder="Ejemplo: Sedán" required>
                 <label for="txtdisenoVehiculo">Diseño del Vehículo</label>
+                <div class="text-danger small" id="errorDiseno"></div>
             </div>
 
             <!-- Campo para Precio -->
             <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="txtprecioVehiculo" th:field="*{precio}"
-                       placeholder="Ejemplo: 25000.00" required step="0.01">
+                <input type="number" class="form-control" id="txtprecioVehiculo"
+                       th:field="*{precio}" placeholder="Ejemplo: 25000.00" required step="0.01">
                 <label for="txtprecioVehiculo">Precio del Vehículo</label>
+                <div class="text-danger small" id="errorPrecio"></div>
             </div>
 
             <!-- Selección de Tipo de Combustión -->
@@ -52,6 +62,7 @@
                     <option th:each="comb : ${combustiones}" th:value="${comb.id}" th:text="${comb.tipoCombustion}"></option>
                 </select>
                 <label for="txtcombustion">Tipo de Combustión</label>
+                <div class="text-danger small" id="errorCombustion"></div>
             </div>
 
             <!-- Selección de Marca -->
@@ -61,6 +72,7 @@
                     <option th:each="marc : ${marcas}" th:value="${marc.id}" th:text="${marc.nombreMarca}"></option>
                 </select>
                 <label for="txtmarca">Marca</label>
+                <div class="text-danger small" id="errorMarca"></div>
             </div>
 
             <!-- Botones de acción -->
@@ -73,5 +85,75 @@
         </form>
     </div>
 </div>
+
+<!-- Script de validación -->
+<script>
+    function validarFormulario() {
+        const color = document.getElementById("txtcolorVehiculo").value.trim();
+        const anio = document.getElementById("txtanioVehiculo").value.trim();
+        const diseno = document.getElementById("txtdisenoVehiculo").value.trim();
+        const precio = document.getElementById("txtprecioVehiculo").value.trim();
+        const combustion = document.getElementById("txtcombustion").value;
+        const marca = document.getElementById("txtmarca").value;
+
+        // Elementos de error
+        const errorColor = document.getElementById("errorColor");
+        const errorAnio = document.getElementById("errorAnio");
+        const errorDiseno = document.getElementById("errorDiseno");
+        const errorPrecio = document.getElementById("errorPrecio");
+        const errorCombustion = document.getElementById("errorCombustion");
+        const errorMarca = document.getElementById("errorMarca");
+
+        let valido = true;
+
+        // Limpiar errores previos
+        errorColor.textContent = "";
+        errorAnio.textContent = "";
+        errorDiseno.textContent = "";
+        errorPrecio.textContent = "";
+        errorCombustion.textContent = "";
+        errorMarca.textContent = "";
+
+        // Validación color (solo letras y espacios)
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(color)) {
+            errorColor.textContent = "⚠️ El color solo puede contener letras.";
+            valido = false;
+        }
+
+        // Validación año (entre 1900 y 2100)
+        if (anio < 1900 || anio > 2100) {
+            errorAnio.textContent = "⚠️ El año debe estar entre 1900 y 2100.";
+            valido = false;
+        }
+
+        // Validación diseño (solo letras y espacios)
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(diseno)) {
+            errorDiseno.textContent = "⚠️ El diseño solo puede contener letras.";
+            valido = false;
+        }
+
+        // Validación precio (mayor a 0)
+        if (isNaN(precio) || parseFloat(precio) <= 0) {
+            errorPrecio.textContent = "⚠️ El precio debe ser un número mayor a 0.";
+            valido = false;
+        }
+
+        // Validación select de combustión
+        if (combustion === "") {
+            errorCombustion.textContent = "⚠️ Debe seleccionar un tipo de combustión.";
+            valido = false;
+        }
+
+        // Validación select de marca
+        if (marca === "") {
+            errorMarca.textContent = "⚠️ Debe seleccionar una marca.";
+            valido = false;
+        }
+
+        return valido;
+    }
+</script>
+
 </body>
 </html>
+

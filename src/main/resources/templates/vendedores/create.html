@@ -1,43 +1,100 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Editar Vendedor</title>
+    <style>
+        .text-danger {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-  <nav th:insert="~{layout::menu}"></nav>
-  <br />
-  <div class="card">
+<nav th:insert="~{layout::menu}"></nav>
+<br />
+<div class="card">
     <div class="card-header text-bg-secondary">
-      Mantenimiento de vendedores
+        Mantenimiento de Vendedores
     </div>
     <div class="card-body">
-      <h5 class="card-title">Registro de vendedores</h5>
-      <hr />
-      <form th:action="@{/vendedores/save}" method="post" th:object="${vendedor}">
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="txtnombre_vendedor" th:field="*{nombre_vendedor}"
-                 placeholder="name@example.com">
-          <label for="txtnombre_vendedor">nombre vendedor</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="txtapellido_vendedor" th:field="*{apellido_vendedor}"
-                 placeholder="name@example.com">
-          <label for="txtapellido_vendedor">apellido vendedor</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="number" class="form-control" id="txtsueldo_vendedor" th:field="*{sueldo_vendedor}"
-                 placeholder="name@example.com">
-          <label for="txtsueldo_vendedor">Stock del proveedor</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="number" class="form-control" id="txtventas_vendedor" th:field="*{ventas_vendedor}"
-                 placeholder="name@example.com">
-          <label for="txtventas_vendedor">ventas vendedor</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar</button>
-      </form>
+        <h5 class="card-title">Actualizar Vendedor</h5>
+        <hr />
+        <form th:action="@{/vendedores/save}" method="post" th:object="${vendedor}" onsubmit="return validarFormulario()">
+
+            <!-- ID -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtId" th:field="*{cod_vendedor}"
+                       placeholder="ID de vendedor" disabled>
+                <label for="txtId">ID de Vendedor</label>
+            </div>
+
+            <!-- Nombre -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtnombre_vendedor" th:field="*{nombre_vendedor}"
+                       placeholder="Ejemplo: Juan" required>
+                <label for="txtnombre_vendedor">Nombre Vendedor</label>
+                <div class="text-danger small" id="errorNombre"></div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtapellido_vendedor" th:field="*{apellido_vendedor}"
+                       placeholder="Ejemplo: Pérez" required>
+                <label for="txtapellido_vendedor">Apellido Vendedor</label>
+                <div class="text-danger small" id="errorApellido"></div>
+            </div>
+
+            <!-- Sueldo -->
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="txtsueldo_vendedor" th:field="*{sueldo_vendedor}"
+                       placeholder="Ejemplo: 1500" required>
+                <label for="txtsueldo_vendedor">Sueldo del Vendedor</label>
+            </div>
+
+            <!-- Ventas -->
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="txtventas_vendedor" th:field="*{ventas_vendedor}"
+                       placeholder="Ejemplo: 30" required>
+                <label for="txtventas_vendedor">Ventas del Vendedor</label>
+            </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn btn-success">Actualizar</button>
+            <a th:href="@{/vendedores}" class="btn btn-secondary">Cancelar</a>
+        </form>
     </div>
-  </div>
+</div>
+
+<!-- Script de validación -->
+<script>
+    function validarFormulario() {
+        const nombre = document.getElementById("txtnombre_vendedor").value.trim();
+        const apellido = document.getElementById("txtapellido_vendedor").value.trim();
+
+        const errorNombre = document.getElementById("errorNombre");
+        const errorApellido = document.getElementById("errorApellido");
+
+        let valido = true;
+
+        // Limpiar mensajes previos
+        errorNombre.textContent = "";
+        errorApellido.textContent = "";
+
+        // Validación nombre
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+            valido = false;
+        }
+
+        // Validación apellido
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellido)) {
+            errorApellido.textContent = "⚠️ El apellido solo puede contener letras.";
+            valido = false;
+        }
+
+        return valido;
+    }
+</script>
+
 </body>
 </html>

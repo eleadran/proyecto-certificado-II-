@@ -15,9 +15,14 @@
     <h5 class="card-title">Actualizar Factura</h5>
     <hr />
     <form th:action="@{/facturas/save}" method="post" th:object="${factura}">
+        <!-- Campo oculto para el ID de la factura -->
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="txtId" th:field="*{id}"
+                   placeholder="ID de la factura" disabled>
+            <label for="txtId">ID de la factura</label>
+        </div>
 
-      <!-- Campo oculto para el ID de la factura -->
-      <input type="hidden" th:field="*{id}" />
+
 
       <!-- Campo para Fecha de Factura -->
       <div class="form-floating mb-3">

@@ -1,42 +1,71 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
-  <meta charset="UTF-8">
-  <title>Editar Marca de Vehículo</title>
+    <meta charset="UTF-8">
+    <title>Editar Marca de Vehículo</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <br />
 <div class="card">
-  <div class="card-header text-bg-secondary">
-    Mantenimiento de Marca
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Actualizar Marca</h5>
-    <hr />
-    <form th:action="@{/marcas/save}" method="post" th:object="${marca}">
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="txtId" th:field="*{id}"
-                   placeholder="ID de la marca" disabled>
-            <label for="txtId">ID de la Marca</label>
-        </div>
-      <input type="hidden" th:field="*{id}">
+    <div class="card-header text-bg-secondary">
+        Mantenimiento de Marca
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Actualizar Marca</h5>
+        <hr />
+        <form th:action="@{/marcas/save}" method="post" th:object="${marca}" onsubmit="return validarFormulario()">
 
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtNombreMarca" th:field="*{nombreMarca}"
-               placeholder="Ejemplo: Toyota, Honda" required>
-        <label for="txtNombreMarca">Nombre de la Marca</label>
-      </div>
+            <!-- ID solo lectura -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtId" th:field="*{id}"
+                       placeholder="ID de la marca" disabled>
+                <label for="txtId">ID de la Marca</label>
+            </div>
+            <input type="hidden" th:field="*{id}">
 
-      <div class="form-floating mb-3">
-        <input type="number" class="form-control" id="txtStock" th:field="*{stock}"
-               placeholder="Cantidad en stock" required>
-        <label for="txtStock">Stock Disponible</label>
-      </div>
+            <!-- Nombre de la Marca -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtNombreMarca" th:field="*{nombreMarca}"
+                       placeholder="Ejemplo: Toyota, Honda" required>
+                <label for="txtNombreMarca">Nombre de la Marca</label>
+                <div class="text-danger small" id="errorNombreMarca"></div>
+            </div>
 
-      <button type="submit" class="btn btn-success">Actualizar Marca</button>
-    </form>
-  </div>
+            <!-- Stock -->
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="txtStock" th:field="*{stock}"
+                       placeholder="Cantidad en stock" required>
+                <label for="txtStock">Stock Disponible</label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Actualizar Marca</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    function validarFormulario() {
+        let nombreMarca = document.getElementById("txtNombreMarca").value;
+
+        // Mensaje de error
+        let errorNombreMarca = document.getElementById("errorNombreMarca");
+
+        let valido = true;
+
+        // Limpiar errores previos
+        errorNombreMarca.textContent = "";
+
+        // Validar que el nombre de la marca NO tenga números
+        if (/\d/.test(nombreMarca)) {
+            errorNombreMarca.textContent = "⚠️ El nombre de la marca no puede contener números.";
+            valido = false;
+        }
+
+        return valido; // Si es false, el formulario no se envía
+    }
+</script>
+
 </body>
 </html>
+

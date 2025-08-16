@@ -1,46 +1,97 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:insert="~{layout::head}">
-  <meta charset="UTF-8">
-  <title>Editar Proveedor</title>
+    <meta charset="UTF-8">
+    <title>Editar Proveedor</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <br />
 <div class="card">
-  <div class="card-header text-bg-secondary">
-    Mantenimiento de Proveedores
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Editar Proveedor</h5>
-    <hr />
-    <form th:action="@{/proveedores/save}" method="post" th:object="${proveedor}">
-      <!-- Campo oculto para el ID del proveedor -->
-      <input type="hidden" th:field="*{codProveedor}">
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtnombre_proveedor" th:field="*{nombreProveedor}"
-               placeholder="Ejemplo: Proveedor Central" required>
-        <label for="txtnombre_proveedor">Nombre del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txttelefono_proveedor" th:field="*{telefonoProveedor}"
-               placeholder="Ejemplo: 123456789" required>
-        <label for="txttelefono_proveedor">Teléfono del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="number" class="form-control" id="txtstock_proveedor" th:field="*{stockProveedor}"
-               placeholder="Ejemplo: 100" required>
-        <label for="txtstock_proveedor">Stock del Proveedor</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txtdireccion_proveedor" th:field="*{direccionProveedor}"
-               placeholder="Ejemplo: Av. Principal 123" required>
-        <label for="txtdireccion_proveedor">Dirección del Proveedor</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Actualizar</button>
-      <a th:href="@{/proveedores}" class="btn btn-secondary">Cancelar</a>
-    </form>
-  </div>
+    <div class="card-header text-bg-secondary">
+        Mantenimiento de Proveedores
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Editar Proveedor</h5>
+        <hr />
+        <form th:action="@{/proveedores/save}" method="post" th:object="${proveedor}" id="formProveedor" onsubmit="return validarFormulario()">
+
+            <!-- Campo oculto para el ID del proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtId"
+                       th:field="*{codProveedor}" placeholder="ID del proveedor" disabled>
+                <label for="txtId">ID del proveedor</label>
+            </div>
+            <!-- Campo oculto que sí viaja en el POST -->
+            <input type="hidden" th:field="*{codProveedor}">
+
+            <!-- Nombre del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtnombre_proveedor" th:field="*{nombreProveedor}"
+                       placeholder="Ejemplo: Proveedor Central" required>
+                <label for="txtnombre_proveedor">Nombre del Proveedor</label>
+                <div class="text-danger small" id="errorNombre"></div>
+            </div>
+
+            <!-- Teléfono del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txttelefono_proveedor" th:field="*{telefonoProveedor}"
+                       placeholder="Ejemplo: 123456789" required maxlength="9" minlength="9">
+                <label for="txttelefono_proveedor">Teléfono del Proveedor</label>
+                <div class="text-danger small" id="errorTelefono"></div>
+            </div>
+
+            <!-- Stock del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="txtstock_proveedor" th:field="*{stockProveedor}"
+                       placeholder="Ejemplo: 100" required>
+                <label for="txtstock_proveedor">Stock del Proveedor</label>
+            </div>
+
+            <!-- Dirección del Proveedor -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txtdireccion_proveedor" th:field="*{direccionProveedor}"
+                       placeholder="Ejemplo: Av. Principal 123" required>
+                <label for="txtdireccion_proveedor">Dirección del Proveedor</label>
+            </div>
+
+            <!-- Botones -->
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a th:href="@{/proveedores}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
 </div>
+
+<!-- Script de validación -->
+<script>
+    function validarFormulario() {
+      const nombre = document.getElementById("txtnombre_proveedor").value.trim();
+      const telefono = document.getElementById("txttelefono_proveedor").value.trim();
+
+      const errorNombre = document.getElementById("errorNombre");
+      const errorTelefono = document.getElementById("errorTelefono");
+
+      let valido = true;
+
+      // Limpiar mensajes previos
+      errorNombre.textContent = "";
+      errorTelefono.textContent = "";
+
+      // Validar nombre: solo letras y espacios
+      if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+        errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
+        valido = false;
+      }
+
+      // Validar teléfono: solo números
+      if (!/^[0-9]+$/.test(telefono)) {
+        errorTelefono.textContent = "⚠️ El teléfono solo puede contener números.";
+        valido = false;
+      }
+
+      return valido;
+    }
+</script>
+
 </body>
 </html>
