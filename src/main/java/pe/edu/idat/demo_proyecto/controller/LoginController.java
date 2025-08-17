@@ -31,18 +31,20 @@ public class LoginController {
                                 @RequestParam String password,
                                 Model model) {
 
-        // Verificar si el correo existe en la lista
+        // Si el correo existe en la lista
         if (allowedUsers.containsKey(email)) {
-            // Verificar contraseña
+            // Validar contraseña
             if (allowedUsers.get(email).equals(password)) {
-                return "redirect:/servidor"; // correcto → servidor.html
+                return "redirect:/servidor"; // login correcto
             } else {
                 model.addAttribute("error", "Contraseña incorrecta.");
+                model.addAttribute("email", email);
                 return "login"; // vuelve al login mostrando error
             }
+        } else {
+            // Correo no está registrado → mostrar error
+            model.addAttribute("error", "Correo incorrecto.");
+            return "login";
         }
-
-        // Si el correo no está en la lista → redirigir a home
-        return "redirect:/home";
     }
 }

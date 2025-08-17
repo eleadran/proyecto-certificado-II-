@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:insert="~{layout::head}">
     <meta charset="UTF-8">
     <title>Registro de clientes</title>
@@ -44,7 +44,7 @@
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="txttelefono_cliente"
                        th:field="*{telefono_cliente}"
-                       placeholder="Teléfono" required maxlength="20">
+                       placeholder="Teléfono" required maxlength="9">
                 <label for="txttelefono_cliente">Teléfono del cliente</label>
                 <div class="text-danger small" id="errorTelefono"></div>
             </div>
@@ -68,6 +68,49 @@
 </div>
 
 <script>
+    // === Validaciones en tiempo real ===
+    function validarTexto(campoId, errorId, campoNombre) {
+        document.getElementById(campoId).addEventListener("input", function () {
+            let valor = this.value.trim();
+            let error = document.getElementById(errorId);
+
+            if (/\d/.test(valor)) {
+                error.textContent = `⚠️ El ${campoNombre} no puede contener números.`;
+            }
+            else if (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(valor)) {
+                error.textContent = `⚠️ El ${campoNombre} no puede contener caracteres especiales.`;
+            }
+            else {
+                error.textContent = "";
+            }
+        });
+    }
+
+    // Aplicar validación en tiempo real
+    validarTexto("txtnombre_cliente", "errorNombre", "nombre");
+    validarTexto("txtapellido_cliente", "errorApellido", "apellido");
+    validarTexto("txttrabajo_cliente", "errorTrabajo", "trabajo");
+
+    // Validación en tiempo real para TELÉFONO
+    document.getElementById("txttelefono_cliente").addEventListener("input", function () {
+        let valor = this.value.trim();
+        let error = document.getElementById("errorTelefono");
+
+        if (/[a-zA-Z]/.test(valor)) {
+            error.textContent = "⚠️ El teléfono no puede contener letras.";
+        }
+        else if (/[^0-9]/.test(valor)) {
+            error.textContent = "⚠️ El teléfono no puede contener caracteres especiales.";
+        }
+        else if (valor.length > 0 && valor.length !== 9) {
+            error.textContent = "⚠️ El teléfono debe tener exactamente 9 dígitos.";
+        }
+        else {
+            error.textContent = "";
+        }
+    });
+
+    // === Validación final al enviar ===
     function validarFormulario() {
         let nombre = document.getElementById("txtnombre_cliente").value.trim();
         let apellido = document.getElementById("txtapellido_cliente").value.trim();
@@ -81,90 +124,38 @@
 
         let valido = true;
 
-        // Limpiar errores previos
         errorNombre.textContent = "";
         errorApellido.textContent = "";
         errorTrabajo.textContent = "";
         errorTelefono.textContent = "";
 
-        // Validar nombre (solo letras y espacios)
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(nombre)) {
-            errorNombre.textContent = "⚠️ El nombre solo puede contener letras.";
+        // Nombre
+        if (/\d/.test(nombre) || /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre solo puede contener letras y espacios.";
             valido = false;
         }
 
-        // Validar apellido (solo letras y espacios)
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(apellido)) {
-            errorApellido.textContent = "⚠️ El apellido solo puede contener letras.";
+        // Apellido
+        if (/\d/.test(apellido) || /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(apellido)) {
+            errorApellido.textContent = "⚠️ El apellido solo puede contener letras y espacios.";
             valido = false;
         }
 
-        // Validar trabajo (solo letras y espacios)
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(trabajo)) {
-            errorTrabajo.textContent = "⚠️ El trabajo solo puede contener letras.";
+        // Trabajo
+        if (/\d/.test(trabajo) || /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(trabajo)) {
+            errorTrabajo.textContent = "⚠️ El trabajo solo puede contener letras y espacios.";
             valido = false;
         }
 
-        // Validar teléfono (exactamente 9 dígitos)
+        // Teléfono
         if (!/^\d{9}$/.test(telefono)) {
-            errorTelefono.textContent = "⚠️ El teléfono debe contener exactamente 9 números.";
+            errorTelefono.textContent = "⚠️ El teléfono debe tener exactamente 9 dígitos numéricos.";
             valido = false;
-        }
-
-        // Si todo es válido, limpiar campos
-        if (valido) {
-            document.getElementById("txtnombre_cliente").value = "";
-            document.getElementById("txtapellido_cliente").value = "";
-            document.getElementById("txttrabajo_cliente").value = "";
-            document.getElementById("txttelefono_cliente").value = "";
-            document.getElementById("txtdireccion_cliente").value = "";
-
-            errorNombre.textContent = "";
-            errorApellido.textContent = "";
-            errorTrabajo.textContent = "";
-            errorTelefono.textContent = "";
         }
 
         return valido;
     }
-
-    // --- VALIDACIÓN EN VIVO ---
-    document.getElementById("txtnombre_cliente").addEventListener("input", function() {
-        if (/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*$/.test(this.value.trim())) {
-            document.getElementById("errorNombre").textContent = "";
-        } else {
-            document.getElementById("errorNombre").textContent = "⚠️ El nombre solo puede contener letras.";
-        }
-    });
-
-    document.getElementById("txtapellido_cliente").addEventListener("input", function() {
-        if (/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*$/.test(this.value.trim())) {
-            document.getElementById("errorApellido").textContent = "";
-        } else {
-            document.getElementById("errorApellido").textContent = "⚠️ El apellido solo puede contener letras.";
-        }
-    });
-
-    document.getElementById("txttrabajo_cliente").addEventListener("input", function() {
-        if (/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*$/.test(this.value.trim())) {
-            document.getElementById("errorTrabajo").textContent = "";
-        } else {
-            document.getElementById("errorTrabajo").textContent = "⚠️ El trabajo solo puede contener letras.";
-        }
-    });
-
-    // Teléfono: muestra advertencia si hay letras o caracteres especiales
-    document.getElementById("txttelefono_cliente").addEventListener("input", function() {
-        let telefono = this.value.trim();
-        if (/^\d{0,9}$/.test(telefono)) {
-            if (telefono.length === 9) {
-                document.getElementById("errorTelefono").textContent = "";
-            }
-        } else {
-            document.getElementById("errorTelefono").textContent = "⚠️ El teléfono solo puede contener números.";
-        }
-    });
 </script>
-
 </body>
 </html>
+
