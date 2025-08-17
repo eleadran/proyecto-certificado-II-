@@ -1,37 +1,102 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{layout::head}">
-  <meta charset="UTF-8">
-  <title>Mantenimiento Combustible</title>
+    <meta charset="UTF-8">
+    <title>Mantenimiento Combustible</title>
 </head>
 <body>
 <nav th:insert="~{layout::menu}"></nav>
 <br />
 <div class="card">
-  <div class="card-header text-bg-secondary">
-    mantenimiento de Combustible
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Registro Combustible</h5>
-    <hr />
-    <form th:action="@{/combustions/save}" method="post" th:object="${combustion}">
-      <input type="hidden" th:field="*{id}"> <!-- ID oculto para actualizar correctamente -->
+    <div class="card-header text-bg-secondary">
+        Mantenimiento de Combustible
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Registro Combustible</h5>
+        <hr />
+        <form th:action="@{/combustions/save}" method="post" th:object="${combustion}" onsubmit="return validarFormulario()">
+            <input type="hidden" th:field="*{id}"> <!-- ID oculto para actualizar correctamente -->
 
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="txttipoCombustion" th:field="*{tipoCombustion}"
-               placeholder="Ejemplo: Gasolina, Diesel" required>
-        <label for="txttipoCombustion">Tipo de Combustible</label>
-      </div>
+            <!-- Campo Tipo Combustible -->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="txttipoCombustion" th:field="*{tipoCombustion}"
+                       placeholder="Ejemplo: Gasolina, Diesel" required>
+                <label for="txttipoCombustion">Tipo de Combustible</label>
+                <div class="text-danger small" id="errorCombustible"></div>
+            </div>
 
-        <!-- Botones de acción -->
-        <button type="submit" class="btn btn-success shadow-sm">
-            <i class="bi bi-save2-fill me-1"></i> Registrar combustible
-        </button>
-        <a href="/combustions" class="btn btn-secondary shadow-sm">
-            <i class="bi bi-arrow-left me-1"></i> Cancelar
-        </a>
-    </form>
-  </div>
+            <!-- Botones de acción -->
+            <button type="submit" class="btn btn-success shadow-sm">
+                <i class="bi bi-save2-fill me-1"></i> Registrar combustible
+            </button>
+            <a href="/combustions" class="btn btn-secondary shadow-sm">
+                <i class="bi bi-arrow-left me-1"></i> Cancelar
+            </a>
+        </form>
+    </div>
 </div>
+
+<script>
+    // --- LISTA EXISTENTE DE COMBUSTIBLES ---
+    const combustiblesExistentes = [
+      "Gasolina", "Diesel", "Gas Natural", "Eléctrico"
+    ]; // <- esta lista puede venir desde tu backend
+
+    // --- SIMILITUD ENTRE DOS STRINGS ---
+    function calcularSimilitud(a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+
+      const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          if (a[i - 1] === b[j - 1]) {
+            dp[i][j] = dp[i - 1][j - 1];
+          } else {
+            dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+          }
+        }
+      }
+
+      const distancia = dp[a.length][b.length];
+      const longitudMax = Math.max(a.length, b.length);
+      return 1 - distancia / longitudMax; // retorna similitud de 0 a 1
+    }
+
+    function validarFormulario() {
+      const combustible = document.getElementById("txttipoCombustion").value.trim();
+      const errorCombustible = document.getElementById("errorCombustible");
+
+      let valido = true;
+      errorCombustible.textContent = "";
+
+      // Validar repetidos o similares
+      const combustibleLower = combustible.toLowerCase();
+      for (let existente of combustiblesExistentes) {
+        if (existente.toLowerCase() === combustibleLower) {
+          errorCombustible.textContent = "⚠️ Este tipo de combustible ya existe.";
+          valido = false;
+          break;
+        }
+        if (calcularSimilitud(existente, combustible) >= 0.6) {
+          errorCombustible.textContent = "⚠️ Este tipo de combustible es muy parecido a uno ya registrado.";
+          valido = false;
+          break;
+        }
+      }
+
+      return valido;
+    }
+
+    // --- VALIDACIÓN EN VIVO ---
+    document.getElementById("txttipoCombustion").addEventListener("input", function () {
+      validarFormulario();
+    });
+</script>
+
 </body>
 </html>

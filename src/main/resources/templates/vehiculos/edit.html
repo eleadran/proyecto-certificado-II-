@@ -102,13 +102,13 @@
         errorColor.textContent = "";
         errorDiseno.textContent = "";
 
-        // Validar Color
+        // Validar Color (solo letras y espacios)
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(color)) {
             errorColor.textContent = "⚠️ El color solo puede contener letras y espacios.";
             valido = false;
         }
 
-        // Validar Diseño
+        // Validar Diseño (solo letras y espacios)
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(diseno)) {
             errorDiseno.textContent = "⚠️ El diseño solo puede contener letras y espacios.";
             valido = false;
@@ -117,16 +117,25 @@
         return valido;
     }
 
-    // Bloqueo en vivo para que no se escriban caracteres inválidos
+    // Validación en tiempo real
     document.getElementById("txtColorVehiculo").addEventListener("input", function () {
-        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+        const errorColor = document.getElementById("errorColor");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(this.value.trim()) || this.value.trim() === "") {
+            errorColor.textContent = "";
+        } else {
+            errorColor.textContent = "⚠️ El color solo puede contener letras y espacios.";
+        }
     });
 
     document.getElementById("txtDisenoVehiculo").addEventListener("input", function () {
-        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+        const errorDiseno = document.getElementById("errorDiseno");
+        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(this.value.trim()) || this.value.trim() === "") {
+            errorDiseno.textContent = "";
+        } else {
+            errorDiseno.textContent = "⚠️ El diseño solo puede contener letras y espacios.";
+        }
     });
 </script>
-
 
 </body>
 </html>

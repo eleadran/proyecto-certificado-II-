@@ -53,7 +53,7 @@
 
             <!-- Botones de acción -->
             <button type="submit" class="btn btn-success shadow-sm">
-                <i class="bi bi-save2-fill me-1"></i> Registrar concesionaria
+                <i class="bi bi-save2-fill me-1"></i> Registrar marca
             </button>
             <a href="/marcas" class="btn btn-secondary shadow-sm">
                 <i class="bi bi-arrow-left me-1"></i> Cancelar
@@ -64,6 +64,31 @@
 
 <!-- Script de validación y control de stock -->
 <script>
+    const marcasRegistradas = ["Toyota", "Chevrolet", "Ford"];
+
+    function calcularSimilitud(str1, str2) {
+        str1 = str1.toLowerCase();
+        str2 = str2.toLowerCase();
+        const m = str1.length, n = str2.length;
+        const dp = Array.from({length: m+1}, () => Array(n+1).fill(0));
+
+        for (let i = 0; i <= m; i++) dp[i][0] = i;
+        for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+        for (let i = 1; i <= m; i++) {
+            for (let j = 1; j <= n; j++) {
+                if (str1[i-1] === str2[j-1]) {
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                }
+            }
+        }
+        const distancia = dp[m][n];
+        const maxLen = Math.max(m, n);
+        return (1 - distancia / maxLen);
+    }
+
     function cambiarStock(valor) {
         const stockInput = document.getElementById("txtStock");
         let stock = parseInt(stockInput.value) || 0;
@@ -74,54 +99,59 @@
 
     function validarFormulario() {
         const nombre = document.getElementById("txtNombreMarca").value.trim();
-        const stock = document.getElementById("txtStock").value.trim();
-
         const errorNombre = document.getElementById("errorNombre");
-        const errorStock = document.getElementById("errorStock");
-
         let valido = true;
 
-        // Limpiar errores previos
         errorNombre.textContent = "";
-        errorStock.textContent = "";
 
-        // Validación: nombre solo letras
+        // Validación solo de letras
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
             errorNombre.textContent = "⚠️ El nombre de la marca solo puede contener letras.";
             valido = false;
         }
 
-        // Validación: stock solo números ≥ 0
-        if (!/^[0-9]+$/.test(stock) || parseInt(stock) < 0) {
-            errorStock.textContent = "⚠️ El stock debe ser un número válido mayor o igual a 0.";
-            valido = false;
+        // Verificar duplicados o similitudes
+        for (let marca of marcasRegistradas) {
+            if (marca.toLowerCase() === nombre.toLowerCase()) {
+                errorNombre.textContent = "⚠️ Esta marca ya está registrada.";
+                valido = false;
+                break;
+            }
+            if (calcularSimilitud(marca, nombre) >= 0.6) {
+                errorNombre.textContent = "⚠️ El nombre es demasiado parecido a una marca ya registrada.";
+                valido = false;
+                break;
+            }
         }
 
-        return valido;
+        return valido; // si es válido se envía al servidor
     }
 
-    // --- VALIDACIÓN EN VIVO ---
+    // Validación dinámica mientras escribe
     document.getElementById("txtNombreMarca").addEventListener("input", function () {
         const errorNombre = document.getElementById("errorNombre");
-        if (/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(this.value.trim())) {
-            errorNombre.textContent = "";
-        } else {
-            errorNombre.textContent = "⚠️ El nombre de la marca solo puede contener letras.";
-        }
-    });
+        const nombre = this.value.trim();
+        errorNombre.textContent = "";
 
-    document.getElementById("txtStock").addEventListener("input", function () {
-        const errorStock = document.getElementById("errorStock");
-        if (/^[0-9]*$/.test(this.value.trim()) && parseInt(this.value) >= 0) {
-            errorStock.textContent = "";
-        } else {
-            errorStock.textContent = "⚠️ El stock debe ser un número válido mayor o igual a 0.";
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/.test(nombre)) {
+            errorNombre.textContent = "⚠️ El nombre de la marca solo puede contener letras.";
+            return;
+        }
+        for (let marca of marcasRegistradas) {
+            if (marca.toLowerCase() === nombre.toLowerCase()) {
+                errorNombre.textContent = "⚠️ Esta marca ya está registrada.";
+                return;
+            }
+            if (calcularSimilitud(marca, nombre) >= 0.6) {
+                errorNombre.textContent = "⚠️ El nombre es demasiado parecido a una marca ya registrada.";
+                return;
+            }
         }
     });
 </script>
 
-
 </body>
 </html>
+
 
 
